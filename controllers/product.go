@@ -6,19 +6,22 @@ import (
 	"golang/backend/services"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/microcosm-cc/bluemonday"
 )
 
 func GetProducts(c *fiber.Ctx) error {
 	baseURL := c.BaseURL() + c.OriginalURL()
+
+	sanitizer := bluemonday.UGCPolicy()
 	response := services.FetchProducts(
 		&dtos.QueryDTO{
-			Page:     c.Query("page"),
-			Limit:    c.Query("limit"),
-			Search:   c.Query("search"),
-			FilterBy: c.Query("filter_by"),
-			Filter:   c.Query("filter"),
-			OrderBy:  c.Query("order_by"),
-			Order:    c.Query("order"),
+			Page:     sanitizer.Sanitize(c.Query("page")),
+			Limit:    sanitizer.Sanitize(c.Query("limit")),
+			Search:   sanitizer.Sanitize(c.Query("search")),
+			FilterBy: sanitizer.Sanitize(c.Query("filter_by")),
+			Filter:   sanitizer.Sanitize(c.Query("filter")),
+			OrderBy:  sanitizer.Sanitize(c.Query("order_by")),
+			Order:    sanitizer.Sanitize(c.Query("order")),
 		},
 		&baseURL,
 	)
@@ -34,6 +37,13 @@ func GetProducts(c *fiber.Ctx) error {
 
 func AddProduct(c *fiber.Ctx) error {
 	var input dtos.InputProductDTO
+
+	// Sanitize input fields
+	sanitizer := bluemonday.UGCPolicy()
+	input.Name = sanitizer.Sanitize(input.Name)
+	input.Description = sanitizer.Sanitize(input.Description)
+	input.CategoryID = sanitizer.Sanitize(input.CategoryID)
+
 	if err := c.BodyParser(&input); err != nil {
 		return c.
 			Status(fiber.StatusBadRequest).
