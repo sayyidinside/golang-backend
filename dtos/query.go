@@ -7,5 +7,7 @@ type (
 		Search      string
 		FilterBy    string
 		FilterValue string
+		OrderBy     string
+		Order       string
 	}
 )
