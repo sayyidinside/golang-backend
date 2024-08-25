@@ -32,10 +32,10 @@ func ToProductKDTO(model models.Product) ProductsDTO {
 	}
 }
 
-func ToProductDTOs(models []models.Product) []ProductsDTO {
-	productDTOs := make([]ProductsDTO, len(models))
+func ToProductDTOs(models *[]models.Product) []ProductsDTO {
+	productDTOs := make([]ProductsDTO, len(*models))
 
-	for index, model := range models {
+	for index, model := range *models {
 		productDTOs[index] = ToProductKDTO(model)
 	}
 
