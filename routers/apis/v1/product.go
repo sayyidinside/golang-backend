@@ -10,4 +10,5 @@ func InitProductRoutes(r fiber.Router) {
 	productRoutes := r.Group("/products")
 
 	productRoutes.Get("", controllers.GetProducts)
+	productRoutes.Post("", controllers.AddProduct)
 }

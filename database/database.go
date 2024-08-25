@@ -40,9 +40,48 @@ func ConnectDb() {
 	migrate()
 }
 
+func seed() {
+	var categoryCount int64
+	DBConn.Model(&models.ProductCategory{}).Count(&categoryCount)
+	if categoryCount > 0 {
+		log.Println("Product category already seeded.")
+		return
+	}
+
+	categories := []models.ProductCategory{
+		{Name: "Automotive"},
+		{Name: "Book"},
+		{Name: "Electronic"},
+		{Name: "Fashion"},
+		{Name: "Home & Kitchen"},
+		{Name: "Sport"},
+	}
+
+	// Creating data using transaction
+	err := DBConn.Transaction(
+		func(tx *gorm.DB) error {
+			if err := tx.Create(&categories).Error; err != nil {
+				return err
+			}
+
+			return nil
+		},
+	)
+
+	if err != nil {
+		log.Fatalf("Error seeding product category: %v", err)
+	} else {
+		log.Println("Product category seeded successfully.")
+	}
+
+}
+
+// Migrate model and seeding data
 func migrate() {
 	DBConn.AutoMigrate(&models.ProductCategory{})
 	DBConn.AutoMigrate(&models.Product{})
 
 	fmt.Println("Migration ruccessfully executed")
+
+	seed()
 }
