@@ -16,9 +16,9 @@ type (
 	}
 
 	InputProductDTO struct {
-		CategoryID  uuid.UUID `json:"category_id"`
-		Name        string    `json:"name"`
-		Description string    `json:"description"`
+		CategoryID  string `json:"category_id" form:"category_id" validate:"required"`
+		Name        string `json:"name" form:"name" validate:"required"`
+		Description string `json:"description"`
 	}
 )
 
