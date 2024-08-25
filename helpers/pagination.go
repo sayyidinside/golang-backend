@@ -40,7 +40,7 @@ func Paginate(query *dtos.QueryDTO) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func GeneratePaginatedQuery(query *dtos.QueryDTO, url string, totalRows int64, data []interface{}) *Pagination {
+func GeneratePaginatedQuery(query *dtos.QueryDTO, url *string, totalRows int64, data []interface{}) *Pagination {
 	// initilize required variable
 	var nextPage, previousPage string
 	var fromRow, toRow int
@@ -62,15 +62,15 @@ func GeneratePaginatedQuery(query *dtos.QueryDTO, url string, totalRows int64, d
 	totalPages := int(math.Ceil(float64(totalRow) / float64(limit)))
 
 	// Set url for first and last page
-	firstPage := fmt.Sprintf("%s?page=1&limit=%d", url, limit)
-	lastPage := fmt.Sprintf("%s?page=%d&limit=%d", url, totalPages, limit)
+	firstPage := fmt.Sprintf("%s?page=1&limit=%d", *url, limit)
+	lastPage := fmt.Sprintf("%s?page=%d&limit=%d", *url, totalPages, limit)
 
 	// Set url for previous and next page
 	if page > 1 {
-		previousPage = fmt.Sprintf("%s?page=%d&limit=%d", url, page-1, limit)
+		previousPage = fmt.Sprintf("%s?page=%d&limit=%d", *url, page-1, limit)
 	}
 	if page < totalPages {
-		nextPage = fmt.Sprintf("%s?page=%d&limit=%d", url, page+1, limit)
+		nextPage = fmt.Sprintf("%s?page=%d&limit=%d", *url, page+1, limit)
 	}
 
 	// Set from and to row (index)
