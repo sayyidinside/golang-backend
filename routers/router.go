@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 )
@@ -22,8 +23,12 @@ func SetupRouter(app *fiber.App) {
 	}))
 
 	router.Use(limiter.New(limiter.Config{
-		Max:        10,
-		Expiration: 30 * time.Second,
+		Max:        20,
+		Expiration: 20 * time.Second,
+	}))
+
+	router.Use(cache.New(cache.Config{
+		Expiration: 5 * time.Minute,
 	}))
 
 	// Route list
