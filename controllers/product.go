@@ -9,7 +9,19 @@ import (
 )
 
 func GetProducts(c *fiber.Ctx) error {
-	response := services.FetchProducts()
+	baseURL := c.BaseURL() + c.OriginalURL()
+	response := services.FetchProducts(
+		&dtos.QueryDTO{
+			Page:     c.Query("page"),
+			Limit:    c.Query("limit"),
+			Search:   c.Query("search"),
+			FilterBy: c.Query("filter_by"),
+			Filter:   c.Query("filter"),
+			OrderBy:  c.Query("order_by"),
+			Order:    c.Query("order"),
+		},
+		&baseURL,
+	)
 
 	if response.Success {
 		c.Status(fiber.StatusOK)
