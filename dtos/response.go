@@ -1,4 +1,4 @@
-package helpers
+package dtos
 
 type Response struct {
 	Success bool        `json:"success"`

@@ -16,9 +16,9 @@ type (
 	}
 
 	InputProductDTO struct {
-		CategoryID  uuid.UUID `json:"category_id"`
-		Name        string    `json:"name"`
-		Description string    `json:"description"`
+		CategoryID  string `json:"category_id" form:"category_id" validate:"required"`
+		Name        string `json:"name" form:"name" validate:"required"`
+		Description string `json:"description"`
 	}
 )
 
@@ -32,10 +32,10 @@ func ToProductKDTO(model models.Product) ProductsDTO {
 	}
 }
 
-func ToProductDTOs(models []models.Product) []ProductsDTO {
-	productDTOs := make([]ProductsDTO, len(models))
+func ToProductDTOs(models *[]models.Product) []ProductsDTO {
+	productDTOs := make([]ProductsDTO, len(*models))
 
-	for index, model := range models {
+	for index, model := range *models {
 		productDTOs[index] = ToProductKDTO(model)
 	}
 

@@ -22,6 +22,20 @@ func LoadENV() {
 	}
 }
 
+func LoadENVTest() {
+	pwd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+
+	envPath := filepath.Join(pwd, "../.env")
+
+	err = godotenv.Load(filepath.Join(envPath))
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+}
+
 // Function to abstarct the process of getting env data that also set default value
 // if the env attribute empty or doesn't exist
 func GetENVWithDefault(key string, defaultValue string) string {
